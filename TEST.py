@@ -11,7 +11,12 @@ def diff_chooser(diff):
 def update_leaderboard(name, tries):
     with open("leaderboard.txt", "a") as file:
         file.write(f"{name}: {tries}\n")
-
+def display_ldrbrd():
+    with open("leaderboard.txt", "r") as file:
+        print("======LEADERBOARD======")
+              for line in file:
+        print(line.strip())
+        print("=======================")
 print("""
 ==== Number Guessing Game ====
       Choose Difficulty
@@ -39,6 +44,7 @@ while True:
             print(f"You are correct! This is the number of guesses you made: {tries}")
             name = input("Enter your name for the leaderboard: ")
             update_leaderboard(name, tries)
+            display_ldrbrd()
             break
 
     play_again = input("Do you want to play again? (yes/no): ").lower()
