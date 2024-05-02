@@ -56,14 +56,18 @@ while True:
             print(f"User guess attempt: {guess}")
             tries += 1  
             if guess > n:
-                print("Go lower")
+                conn.sendall("Go lower")
+                continue
             elif guess < n:
-                print("Go higher")
+                conn.sendall("Go higher")
+                continue
             else:
-                print(f"You are correct! This is the number of guesses you made: {tries}")
-                name = input("Enter your name for the leaderboard: ")
+                conn.sendall(f"You are correct! This is the number of guesses you made: {tries}")
+                conn.sendall("Enter your name for the leaderboard: ")
+                client_input = conn.recv(1024)
+                name = client_input
                 update_leaderboard(name, tries)
-                display_ldrbrd()
-                break
+                conn.sendall(display_ldrbrd())
+                conn = None
+                continue
 
-s.close
