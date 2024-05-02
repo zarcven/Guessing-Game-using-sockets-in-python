@@ -9,7 +9,7 @@ b. medium (1-100)
 
 c. hard (1-500)
 
-The numbers in the column is the range of the numbers to guess from
+The numbers in the parentheses is the range of the numbers to guess from
 
 # TEST.PY
 In the test.py it is the base guessing game 
@@ -19,4 +19,4 @@ after every game.
 
 It also asks for the player's name after they have guessed the number
 
-It also asks the player of they want to play again
+It also asks the player if they want to play again
