@@ -4,36 +4,39 @@ host = ""
 port = 7777
 
 banner = b"""
-==== Guessing Game ====
-   Choose Difficulty
- [EASY] [MEDIUM] [HARD]
-"""
-eas = b"""
-==== Guessing Game ====
- GUESS THE NUMBER 1-5
-"""
-medi = b"""
-==== Guessing Game ====
- GUESS THE NUMBER 1-20
-"""
-har = b"""
-==== Guessing Game ====
- GUESS THE NUMBER 1-100
+==== Number Guessing Game ====
+      Choose Difficulty
+    [EASY] [MEDIUM] [HARD]
+Choose between the difficulties
+A = EASY
+B = MEDIUM
+C = HARD
 """
 
-def easy():
-    return random.randint(1, 5)
-def med():
-    return random.randint(1, 20)
-def hard():
-    return random.randint(1, 100)
+def diff_chooser(diff):
+    if diff == 'a':
+        return random.randint(1, 50)
+    elif diff == 'b':
+        return random.randint(1, 100)
+    elif diff == 'c':
+        return random.randint(1, 500)
+
+def update_leaderboard(name, tries):
+    with open("leaderboard.txt", "a") as file:
+        file.write(f"{name}: {tries}\n")
+
+def display_ldrbrd():
+    with open("leaderboard.txt", "r") as file:
+        print("======LEADERBOARD======")
+        for line in file:
+            print(line.strip())
+        print("=======================")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host,port))
 s.listen(5)
 
 print("Server is listening in port %s" % (port))
-
 conn = None
 n = 0
 while True:
@@ -43,50 +46,24 @@ while True:
         conn.sendall(banner)
     else:
         client_input = conn.recv(1024)
-        diff = str(client_input.decode().strip())
-        if diff == 'easy':
-            n = easy()
-            print(n)
-            while True:
-                client_input1 = conn.recv(1024)
-                guess = int(client_input1.decode().strip())
-                if (guess > n):
-                    conn.sendall(b"LOWER")
-                    continue
-                elif (guess < n):
-                    conn.sendall(b"HIGHER")
-                    continue
-                else:
-                    conn.sendall(b"CORRECT")
-                    break
-        elif diff == 'medium':
-            n = med()
-            print(n)
-            while True:
-                client_input1 = conn.recv(1024)
-                guess = int(client_input1.decode().strip())
-                if (guess > n):
-                    conn.sendall(b"LOWER")
-                    continue
-                elif (guess < n):
-                    conn.sendall(b"HIGHER")
-                    continue
-                else:
-                    conn.sendall(b"CORRECT")
+        if client_input in ['a', 'b', 'c']:
+            difficulty = client_input
+            n = diff_chooser(difficulty)
+            conn.sendall(b"Enter your guess:")
+            tries = 0  
+        elif client_input.isdigit():
+            guess = int(client_input)
+            print(f"User guess attempt: {guess}")
+            tries += 1  
+            if guess > n:
+                print("Go lower")
+            elif guess < n:
+                print("Go higher")
+            else:
+                print(f"You are correct! This is the number of guesses you made: {tries}")
+                name = input("Enter your name for the leaderboard: ")
+                update_leaderboard(name, tries)
+                display_ldrbrd()
                 break
-        elif diff == 'hard':
-            n = hard()
-            print(n)
-            while True:
-                client_input1 = conn.recv(1024)
-                guess = int(client_input1.decode().strip())
-                if (guess > n):
-                    conn.sendall(b"LOWER")
-                    continue
-                elif (guess < n):
-                    conn.sendall(b"HIGHER")
-                    continue
-                else:
-                    conn.sendall(b"CORRECT")
-                break
+
 s.close
