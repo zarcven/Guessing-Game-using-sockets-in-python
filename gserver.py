@@ -1,5 +1,6 @@
 import socket
 import random
+
 host = ""
 port = 7777
 
@@ -27,47 +28,61 @@ def update_leaderboard(name, tries):
 
 def display_ldrbrd():
     with open("leaderboard.txt", "r") as file:
-        print("======LEADERBOARD======")
-        for line in file:
-            print(line.strip())
-        print("=======================")
+        leaderboard = file.read()
+        return leaderboard.encode()
+
+def play_again(conn):
+    conn.sendall(b"Do you want to play again? (yes/no): ")
+    choice = conn.recv(1024).decode().strip().lower()
+    if choice == "yes":
+        return True
+    elif choice == "no":
+        return False
+    else:
+        conn.sendall(b"Invalid choice. Please enter 'yes' or 'no'.")
+        return play_again(conn)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host,port))
 s.listen(5)
 
 print("Server is listening in port %s" % (port))
-conn = None
-n = 0
+
 while True:
-    if conn is None:
-        print("waiting for connection...")
-        conn, addr = s.accept()
-        conn.sendall(banner)
-    else:
-        client_input = conn.recv(1024)
+    conn, addr = s.accept()
+    conn.sendall(banner)
+
+    while True:
+        client_input = conn.recv(1024).decode().strip()
         if client_input in ['a', 'b', 'c']:
             difficulty = client_input
             n = diff_chooser(difficulty)
-            conn.sendall(b"Enter your guess:")
+            conn.sendall(b"Enter your guess: ")
             tries = 0  
         elif client_input.isdigit():
             guess = int(client_input)
-            print(f"User guess attempt: {guess}")
             tries += 1  
-            if guess > n:
-                conn.sendall("Go lower")
-                continue
-            elif guess < n:
-                conn.sendall("Go higher")
-                continue
-            else:
-                conn.sendall(f"You are correct! This is the number of guesses you made: {tries}")
-                conn.sendall("Enter your name for the leaderboard: ")
-                client_input = conn.recv(1024)
+
+            if guess == n:
+                conn.sendall(f"You are correct! This is the number of guesses you made: {tries}\nEnter your name for the leaderboard: ".encode())
+                client_input = conn.recv(1024).decode().strip()
                 name = client_input
                 update_leaderboard(name, tries)
                 conn.sendall(display_ldrbrd())
-                conn = None
+                if not play_again(conn):
+                    conn.close()
+                    break
+                else:
+                    conn.sendall(banner)
+                    continue
+            elif guess > n:
+                conn.sendall(b"Go lower: ")
                 continue
+            elif guess < n:
+                conn.sendall(b"Go higher: ")
+                continue
+        else:
+            conn.sendall(b"Invalid response. Please enter a valid guess.")
+            continue
 
+s.close()
