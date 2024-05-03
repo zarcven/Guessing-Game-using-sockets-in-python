@@ -23,10 +23,23 @@ after every game.
 
 3.It also asks the player if they want to play again
 
-INSTALLATION
+# INSTALLATION
 
 1. Install python from python.org after installation add python to the system's PATH during set-up
 
 2. All libraries used are built into python
 
-3. Copy the 
+3. Copy serverg.py and clientg.py to two seperate files
+
+4. Then download the leaderboard.txt file
+
+# INSTRUCTIONS
+1. Open any terminal open two instances of the terminal
+
+2. Go to the location of the copied serverg.py and clientg.py files
+
+3. Start the server first serverg.py by typing the terminal python gserver.py
+
+4. Start the client by typing the terminal python clientg.py
+
+5. 
