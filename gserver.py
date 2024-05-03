@@ -29,7 +29,7 @@ def update_leaderboard(name, tries):
             entry_name, entry_tries = line.strip().split(": ")
             entries.append((entry_name, int(entry_tries)))
     entries.append((name, tries))
-    entries.sort(key=lambda x: x[1])  # Sort by number of tries (ascending order)
+    entries.sort(key=lambda x: x[1]) 
 
     with open("leaderboard.txt", "w") as file:
         for entry in entries:
