@@ -1,5 +1,5 @@
-# Guessing-Game-using-sockets-in-python
-This is a guessing game that uses sockets in python
+# Guessing-Game-Using-Sockets-in-Python
+This is a guessing game that uses sockets in python there sets of codes the server side and the client side
 
 # The Game Consists of 3 Difficulties
 
