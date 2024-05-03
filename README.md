@@ -42,4 +42,8 @@ after every game.
 
 4. Start the client by typing the terminal python clientg.py
 
-5. 
+5. After starting clientg.py press enter again and after that just follow the instructions within the game
+
+6. After playing the leaderboard will display the user must then press enter again
+
+7. It will prompt the user to play again
