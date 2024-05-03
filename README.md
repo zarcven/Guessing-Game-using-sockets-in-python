@@ -22,3 +22,11 @@ after every game.
 2.It also asks for the player's name after they have guessed the number
 
 3.It also asks the player if they want to play again
+
+INSTALLATION
+
+1. Install python from python.org after installation add python to the system's PATH during set-up
+
+2. All libraries used are built into python
+
+3. Copy the 
