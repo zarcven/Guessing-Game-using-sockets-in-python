@@ -23,8 +23,17 @@ def diff_chooser(diff):
         return random.randint(1, 500)
 
 def update_leaderboard(name, tries):
-    with open("leaderboard.txt", "a") as file:
-        file.write(f"{name}: {tries}\n")
+    entries = []
+    with open("leaderboard.txt", "r") as file:
+        for line in file:
+            entry_name, entry_tries = line.strip().split(": ")
+            entries.append((entry_name, int(entry_tries)))
+    entries.append((name, tries))
+    entries.sort(key=lambda x: x[1])  # Sort by number of tries (ascending order)
+
+    with open("leaderboard.txt", "w") as file:
+        for entry in entries:
+            file.write(f"{entry[0]}: {entry[1]}\n")
 
 def display_ldrbrd():
     with open("leaderboard.txt", "r") as file:
